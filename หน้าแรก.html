@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>หน้าแรกของเว็บไซต์ดูคะแนน</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        nav {
+            margin: 20px;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+        }
+        .form-group button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .result {
+            font-size: 24px;
+            color: #333;
+            margin-top: 20px;
+        }
+        .welcome {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Taphanhin school</h1>
+    </header>
+    <nav>
+        <a href="#">หน้าแรก</a>
+        <a href="#">เกี่ยวกับ</a>
+        <a href="#">บริการ</a>
+        <a href="#">ติดต่อเรา</a>
+    </nav>
+    <div class="container">
+        <div class="welcome">ห้อง A หรือ F น้า</div>
+        <div class="form-group">
+            <label for="nameInput">กรอกชื่อหรือหมายเลขประจำตัว:</label>
+            <input type="text" id="nameInput" />
+        </div>
+        <div class="form-group">
+            <button onclick="showScore()">ดูคะแนน</button>
+        </div>
+        <div class="result" id="result">0</div>
+    </div>
+
+    <script>
+        // ข้อมูลตัวอย่าง
+        const scores = {
+            "M13": 12000,
+            "S15": 15000,
+            "M16": 14300, 
+            "D19": 6400, 
+            "A20": 13000, 
+            "K23": 6280, 
+            "P27": 5900, 
+            "T21": 5800, 
+            "K25": 16200, 
+            "T28": 13800, 
+        };
+
+        function showScore() {
+            const name = document.getElementById('nameInput').value;
+            const resultElement = document.getElementById('result');
+            const score = scores[name];
+
+            if (score !== undefined) {
+                animateScore(score, resultElement);
+            } else {
+                resultElement.textContent = 'ไม่พบข้อมูล';
+            }
+        }
+
+        function animateScore(target, resultElement) {
+            let currentScore = 0;
+            const duration = 1000; // ระยะเวลาในการแสดงคะแนน (มิลลิวินาที) ให้เร็วขึ้น
+            const stepTime = Math.abs(Math.floor(duration / target));
+
+            const timer = setInterval(() => {
+                currentScore += 10; // เพิ่มคะแนนต่อครั้ง
+                if (currentScore > target) {
+                    currentScore = target; // ป้องกันไม่ให้คะแนนเกินค่าที่กำหนด
+                }
+                resultElement.textContent = currentScore;
+                if (currentScore >= target) {
+                    clearInterval(timer);
+                    // แสดงห้องหลังจากคะแนนเพิ่มขึ้นเสร็จ
+                    setTimeout(() => {
+                        const room = currentScore < 10000 ? 'ห้อง F' : 'ห้อง A';
+                        resultElement.textContent = `คะแนนของคุณคือ ${currentScore} อยู่ใน ${room}`;
+                    }, 100); // เวลารอ 0.1 วินาทีเพื่อให้คะแนนหยุดนิ่งก่อนแสดงห้อง
+                }
+            }, stepTime);
+        }
+    </script>
+</body>
+</html>
